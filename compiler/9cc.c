@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 		  i++;
 		  if (tokens[0].ty != TK_NUM)
 			  error("invalid token: %s", tokens[i].input);
-		  printf("	add rax, %d\n", tokens[i].val);
+		  printf("  add rax, %d\n", tokens[i].val);
 		  i++;
 		  continue;
 	  }
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 		  i++;
 		  if (tokens[0].ty != TK_NUM)
 			  error("invalid token: %s", tokens[i].input);
-		  printf("	sub rax, %d\n", tokens[i].val);
+		  printf("  sub rax, %d\n", tokens[i].val);
 		  i++;
 		  continue;
 	  }
@@ -104,6 +104,6 @@ int main(int argc, char **argv) {
 	  error("invalid token: %s", tokens[i].input);
   }
 
-  printf("	ret\n");
+  printf("  ret\n");
   return 0;
 }
