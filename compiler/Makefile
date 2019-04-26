@@ -5,3 +5,6 @@ test: 9cc
 
 clean:
 	rm -f 9cc *.o *~ tmp*
+
+debug:
+	gcc -g -O0 -o 9cc 9cc.c && gdb 9cc
