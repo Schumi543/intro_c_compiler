@@ -28,6 +28,16 @@ typedef struct Node {
 // assume token size <=100
 Token tokens[100];
 
+// for report error
+// the args of this function is same as "printf"
+void error(char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	fprintf(stderr, "\n");
+	exit(1);
+}
+
 Node *new_node(int ty, Node *lhs, Node *rhs) {
 	Node *node = malloc(sizeof(Node));
 	node->ty =ty;
@@ -42,6 +52,14 @@ Node *new_node_num(int val) {
 	node->val = val;
 	return node;
 }
+
+// prototypes
+int consume(int ty);
+Node *term();
+Node *add();
+Node *mul();
+
+int pos = 0;
 
 int consume(int ty) {
 	if (tokens[pos].ty != ty)
@@ -93,15 +111,6 @@ Node *add() {
 }
 
 
-// for report error
-// the args of this function is same as "printf"
-void error(char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, "\n");
-	exit(1);
-}
 
 // split strings pointed by *p, and save in tokens
 void tokenize(char *p) {
@@ -173,40 +182,17 @@ int main(int argc, char **argv) {
   }
 
   tokenize(argv[1]);
+  Node *node = add();
 
   // output first half of assembly
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
 
-  if (tokens[0].ty != TK_NUM)
-	  error("expression must begin with number");
-  printf("  mov rax, %d\n", tokens[0].val);
+  // descend AST and generate code
+  gen(node);
 
-  // consume `<+ num> or <- num> and output assembly`
-  int i =1;
-  while (tokens[i].ty != TK_EOF) {
-	  if (tokens[i].ty == '+') {
-		  i++;
-		  if (tokens[0].ty != TK_NUM)
-			  error("invalid token: %s", tokens[i].input);
-		  printf("  add rax, %d\n", tokens[i].val);
-		  i++;
-		  continue;
-	  }
-
-	  if (tokens[i].ty == '-') {
-		  i++;
-		  if (tokens[0].ty != TK_NUM)
-			  error("invalid token: %s", tokens[i].input);
-		  printf("  sub rax, %d\n", tokens[i].val);
-		  i++;
-		  continue;
-	  }
-
-	  error("invalid token: %s", tokens[i].input);
-  }
-
+  printf("  pop rax\n");
   printf("  ret\n");
   return 0;
 }
