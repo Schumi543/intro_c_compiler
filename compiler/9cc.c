@@ -196,7 +196,7 @@ int main(int argc, char **argv) {
   }
 
   tokenize(argv[1]);
-  Node *node = add();
+  Node *node = expr();
 
   // output first half of assembly
   printf(".intel_syntax noprefix\n");
