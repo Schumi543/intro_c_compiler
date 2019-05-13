@@ -58,6 +58,7 @@ int consume(int ty);
 Node *term();
 Node *add();
 Node *mul();
+Node *expr();
 
 int pos = 0;
 
@@ -66,6 +67,19 @@ int consume(int ty) {
 		return 0;
 	pos++;
 	return 1;
+}
+
+Node *expr() {
+	Node *node = mul();
+
+	for (;;) {
+		if (consume('+'))
+			node = new_node('+', node, mul());
+		else if (consume('-'))
+			node = new_node('-', node, mul());
+		else
+			return node;
+	}
 }
 
 Node *term() {
