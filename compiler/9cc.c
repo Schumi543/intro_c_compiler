@@ -182,7 +182,7 @@ void gen(Node *node) {
 			printf("  mul rdi\n");
 			break;
 		case '/':
-			printf("  mov rax, 0\n");
+			printf("  mov rdx, 0\n");
 			printf("  div rdi\n");
 	}
 
